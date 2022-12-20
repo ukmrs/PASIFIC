@@ -1,6 +1,7 @@
-#!/bin/env perl
+#!/usr/bin/env perl
 use strict; 
 use Bio::SeqIO;
+use Cwd;
 
 # Set params
 my ($tmpdir, $name, $p_P1, $p_simpAT, $p_limitAT, $p_findterm) = @ARGV;
@@ -120,10 +121,14 @@ while (my $seq_obj = $seq_file->next_seq())
 			##############################
 			#### fold the two options ####
 			##############################
-			my $folddesc = ">".$tmpdir."TM_".$name."_".$ID;
+
+      my $original_cwd = cwd();
+      chdir($tmpdir) or die "Could not change directory: $!";
+			my $folddesc = ">"."TM_".$name."_".$ID;
 			my @TMfold = `printf "$folddesc\n$seq\n$TMconstraint" | RNAfold -p -d2 --noLP -C`;
-			$folddesc = ">".$tmpdir."AT_".$name."_".$ID;
+			$folddesc = ">"."AT_".$name."_".$ID;
 			my @ATfold = `printf "$folddesc\n$seq\n$ATconstraint" | RNAfold -p -d2 --noLP -C`;
+      chdir($original_cwd) or die "Could not change directory: $!";
 			
 			
 			################################
@@ -266,6 +271,10 @@ while (my $seq_obj = $seq_file->next_seq())
 			###########################
 			# print naive fold params #
 			###########################
+    
+      my $original_cwd = cwd();
+      chdir($tmpdir) or die "Could not change directory: $!";
+
 			my @naivefold = `echo $seq | RNAfold -p -d2 --noLP`;
 			$naivefold[1]=~ m/(?<Gnaive>(\-?\d+(\.\d+)?))/;
 			my $Gnaive = $+{Gnaive};
@@ -274,6 +283,8 @@ while (my $seq_obj = $seq_file->next_seq())
 			print $fh_out "$+{FRQnaive}\t"; # irrelevant for current classifier
 			$naivefold[4]=~ m/\;.+?(?<DIVnaive>(\d+(\.\d+)?))/;
 			print $fh_out "$+{DIVnaive}\t"; # irrelevant for current classifier
+
+      chdir($original_cwd) or die "Could not change directory: $!";
 
 			# naive fold dG
 			print $fh_out $GATfold-$Gnaive;
