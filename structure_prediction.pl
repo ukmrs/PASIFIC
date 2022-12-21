@@ -18,6 +18,12 @@ my $ID;
 my $seq;
 my $seq_len;
 
+
+if (substr($tmpdir, -1) ne '/') {
+    $tmpdir .= '/';
+}
+
+
 # Open the in fasta file, and the output file
 my $seq_file = Bio::SeqIO -> new(-file => $tmpdir.$name."\.fasta", 
 								-format => 'Fasta' );
