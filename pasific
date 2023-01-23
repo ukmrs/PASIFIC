@@ -4,7 +4,11 @@ import argparse
 from pathlib import Path
 
 SCRIPTDIR = Path(__file__).parent.absolute()
-MODELFILE = SCRIPTDIR.parent / "binshare/rf13-3.RData"
+PASIFICDIR = SCRIPTDIR.parent / "binshare/pasific"
+
+MODEL = PASIFICDIR / "rf13-3.RData"
+RFPREDICTION = PASIFICDIR / "RFprediction.R"
+STRUCTUREPREDICTION = PASIFICDIR / "structure_prediction.pl"
 
 
 def parseargs():
@@ -20,15 +24,13 @@ def main():
     tmpdir = Path(args.tmpdir).absolute()
 
     pflag = str(int(args.p1))
-    subprocess.check_output(
-        ["structure_prediction.pl", args.tmpdir, args.filename, pflag]
-    )
+    subprocess.check_output([STRUCTUREPREDICTION, args.tmpdir, args.filename, pflag])
 
     outfile = args.filename + ".out"
     outfile_absolute = tmpdir.absolute() / outfile
     print(outfile_absolute)
 
-    subprocess.check_output(["RFprediction.R", MODELFILE, outfile_absolute])
+    subprocess.check_output([RFPREDICTION, MODEL, outfile_absolute])
 
 
 if __name__ == "__main__":
