@@ -16,6 +16,8 @@ def parseargs():
     parser.add_argument("tmpdir")
     parser.add_argument("filename")
     parser.add_argument("-p", "--p1", action="store_true")
+    parser.add_argument("--simple-at", dest="simpleat", action="store_true")
+    parser.add_argument("--limit-at", dest="limitat", action="store_true")
     return parser.parse_args()
 
 
@@ -23,8 +25,13 @@ def main():
     args = parseargs()
     tmpdir = Path(args.tmpdir).absolute()
 
-    pflag = str(int(args.p1))
-    subprocess.check_output([STRUCTUREPREDICTION, args.tmpdir, args.filename, pflag])
+    p1flag = str(int(args.p1))
+    simpleat = str(int(args.simpleat))
+    limitat = str(int(args.limitat))
+
+    subprocess.check_output(
+        [STRUCTUREPREDICTION, args.tmpdir, args.filename, p1flag, simpleat, limitat]
+    )
 
     outfile = args.filename + ".out"
     outfile_absolute = tmpdir.absolute() / outfile
