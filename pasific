@@ -4,7 +4,7 @@ import argparse
 from pathlib import Path
 
 SCRIPTDIR = Path(__file__).parent.absolute()
-PASIFICDIR = SCRIPTDIR.parent / "binshare/pasific"
+PASIFICDIR = SCRIPTDIR.parent / "binshare/PASIFIC"
 
 MODEL = PASIFICDIR / "rf13-3.RData"
 RFPREDICTION = PASIFICDIR / "RFprediction.R"
